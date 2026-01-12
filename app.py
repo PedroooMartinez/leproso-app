@@ -63,25 +63,30 @@ if "logueado" not in st.session_state:
     st.session_state["logueado"] = False
 
 # --- PANTALLA DE INICIO (LOGIN) ---
+# --- PANTALLA DE INICIO (LOGIN) ---
 if not st.session_state["logueado"]:
-    # Centrar el logo y el login
-    _, col_centrada, _ = st.columns([1, 2, 1])
+    # Creamos 3 columnas: la del medio es donde va el contenido
+    # Ajustamos los números [1, 2, 1] para que la del centro sea el foco
+    col_izq, col_centro, col_der = st.columns([1, 2, 1])
     
-    with col_centrada:
-        st.image("csir.png", width=100)
-        st.markdown("<h2 style='text-align: center; margin-bottom: 20px;'>Socio CSIR</h2>", unsafe_allow_html=True)
+    with col_centro:
+        # Aquí usamos un truco de HTML para asegurar el centrado total del logo
+        st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+        st.image("csir.png", width=120)
+        st.markdown("</div>", unsafe_allow_html=True)
         
-        with st.container():
-            email = st.text_input("Usuario", placeholder="correo@ejemplo.com")
-            password = st.text_input("Contraseña", type="password", placeholder="••••••••")
-            st.write("")
-            if st.button("Iniciar Sesión"):
-                # Por ahora, clave estática hasta conectar el Excel
-                if email == "azul@gmail.com" and password == "1913":
-                    st.session_state["logueado"] = True
-                    st.rerun()
-                else:
-                    st.error("Credenciales no válidas")
+        st.markdown("<h2 style='text-align: center; margin-top: 10px;'>Socio CSIR</h2>", unsafe_allow_html=True)
+        
+        # El resto del formulario se mantiene igual
+        email = st.text_input("Usuario", placeholder="correo@ejemplo.com")
+        password = st.text_input("Contraseña", type="password", placeholder="••••••••")
+        st.write("")
+        if st.button("Iniciar Sesión"):
+            if email == "azul@gmail.com" and password == "1913":
+                st.session_state["logueado"] = True
+                st.rerun()
+            else:
+                st.error("Credenciales no válidas")
 
 # --- PANTALLA PRINCIPAL (DENTRO) ---
 else:
