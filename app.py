@@ -7,9 +7,10 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. CSS PROFESIONAL
+# 2. CSS PROFESIONAL Y CORRECCIÓN DE COLORES
 st.markdown("""
     <style>
+    /* Fondo Azul Club */
     .stApp {
         background-color: #002B5B;
         color: #ffffff;
@@ -21,57 +22,55 @@ st.markdown("""
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding-top: 30px;
+        padding-top: 20px;
     }
-    .acceder-text { font-size: 45px; font-weight: 800; margin-bottom: 0px; }
+    .acceder-text { font-size: 45px; font-weight: 800; margin-bottom: 0px; color: white; }
     .caudillo-text { font-size: 20px; font-weight: 300; color: #a8dadc; margin-bottom: 30px; }
 
-    /* CUADROS DE TEXTO */
+    /* INPUTS (Fondo blanco, letra azul) */
     div[data-baseweb="input"] { background-color: #ffffff !important; border-radius: 10px !important; }
     input { color: #002B5B !important; -webkit-text-fill-color: #002B5B !important; }
 
-    /* BOTONES DEL PANEL (SIMÉTRICOS) */
-    .panel-btn button {
+    /* BOTONES DEL PANEL INTERNO (IGUALES Y LEGIBLES) */
+    div.stButton > button {
+        width: 100% !important;
+        height: 100px !important;
         background-color: rgba(255, 255, 255, 0.1) !important;
         color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 15px !important;
-        height: 120px !important;
-        width: 100% !important;
-        font-size: 18px !important;
+        font-size: 20px !important;
         font-weight: bold !important;
-        transition: 0.3s !important;
-        margin-bottom: 15px !important;
+        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 15px !important;
+        display: block !important;
+        transition: 0.3s;
     }
-    .panel-btn button:hover {
+    
+    div.stButton > button:hover {
         background-color: rgba(255, 255, 255, 0.2) !important;
-        border: 1px solid #ffffff !important;
-        transform: translateY(-3px);
+        border-color: white !important;
     }
 
-    /* BOTÓN ACCEDER (CHICO Y CENTRADO) */
+    /* BOTÓN ACCEDER (BLANCO CON LETRA AZUL - CHICO) */
     .login-center {
         display: flex;
         justify-content: center;
-        margin-top: 10px;
+        width: 100%;
     }
-    .login-center button {
-        background-color: #ffffff !important;
-        color: #002B5B !important;
-        height: 45px !important;
-        width: 160px !important;
-        border-radius: 10px !important;
-        font-weight: bold !important;
-        font-size: 16px !important;
+    
+    /* Forzamos el estilo específico para el botón de login */
+    div.stButton > button[kind="secondaryFormSubmit"], 
+    div.stButton > button:first-child:not(.panel-btn) {
+        /* Este estilo se aplica al primer botón que encuentre (el de login) */
     }
 
+    /* Ocultar basurita de Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# 3. NAVEGACIÓN
+# 3. LÓGICA DE NAVEGACIÓN
 if "page" not in st.session_state:
     st.session_state["page"] = "login"
 
@@ -84,41 +83,60 @@ if st.session_state["page"] == "login":
         email_input = st.text_input("Correo", placeholder="usuario@mail.com", label_visibility="collapsed")
         pass_input = st.text_input("Clave", type="password", placeholder="••••••••", label_visibility="collapsed")
         
-        st.markdown('<div class="login-center">', unsafe_allow_html=True)
+        # Botón Acceder estilizado manualmente
+        st.markdown("""
+            <style>
+            /* Estilo específico para el botón de esta pantalla */
+            div.stButton > button {
+                background-color: white !important;
+                color: #002B5B !important;
+                height: 45px !important;
+                width: 160px !important;
+                margin: 0 auto !important;
+                display: block !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+        
         if st.button("ACCEDER"):
             if email_input == "admin@csir.com" and pass_input == "1913":
                 st.session_state["page"] = "home"
                 st.rerun()
             else:
                 st.error("Datos incorrectos")
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # --- PANTALLA PRINCIPAL (DENTRO) ---
 elif st.session_state["page"] == "home":
     st.markdown("<h2 style='text-align: center; margin-bottom: 30px;'>Panel de Control</h2>", unsafe_allow_html=True)
     
+    # CSS específico para que los botones internos sean distintos al de login
+    st.markdown("""
+        <style>
+        div.stButton > button {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            height: 120px !important;
+            width: 100% !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     col1, col2 = st.columns(2)
-    
-    # Usamos contenedores con la clase panel-btn para que sean todos iguales
     with col1:
-        st.markdown('<div class="panel-btn">', unsafe_allow_html=True)
         if st.button("👤 Perfil"):
             st.session_state["page"] = "perfil"
             st.rerun()
         if st.button("⭐ Mejora de socio"):
             st.session_state["page"] = "mejora"
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<div class="panel-btn">', unsafe_allow_html=True)
         if st.button("💰 Pagos"):
             st.session_state["page"] = "pagos"
             st.rerun()
         if st.button("🎟️ Comprar entradas"):
             st.session_state["page"] = "entradas"
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
     with st.sidebar:
         st.image("csir.png", width=80)
@@ -129,7 +147,7 @@ elif st.session_state["page"] == "home":
 # --- SUBPÁGINAS ---
 elif st.session_state["page"] == "perfil":
     st.markdown("## 👤 Mi Perfil")
-    st.write("Bienvenido, Socio Caudillo.")
+    st.write("Datos del socio...")
     if st.button("⬅️ Volver"):
         st.session_state["page"] = "home"
         st.rerun()
