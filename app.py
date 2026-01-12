@@ -1,7 +1,7 @@
 import streamlit as st
 
 # 1. CONFIGURACIÓN DE PÁGINA
-st.set_page_config(page_title="Socio CSIR", page_icon="💙", layout="centered")
+st.set_page_config(page_title="Socio CSIR", page_icon="csir.png", layout="centered")
 
 # 2. DISEÑO AVANZADO (CSS)
 st.markdown("""
