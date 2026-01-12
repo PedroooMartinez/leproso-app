@@ -7,7 +7,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. DISEÑO PROFESIONAL (CSS PERSONALIZADO)
+# 2. DISEÑO PROFESIONAL (CSS CORREGIDO)
 st.markdown("""
     <style>
     /* Color Azul Independiente Rivadavia */
@@ -26,7 +26,6 @@ st.markdown("""
         padding-top: 50px;
     }
 
-    /* Estilo de los textos */
     .acceder-text {
         font-size: 42px;
         font-weight: 800;
@@ -40,14 +39,22 @@ st.markdown("""
         margin-bottom: 40px;
     }
 
-    /* Estilo de los inputs */
+    /* --- ARREGLO DE VISIBILIDAD DE TEXTO --- */
+    /* Fondo de los cuadros de texto */
     div[data-baseweb="input"] {
-        background-color: rgba(255, 255, 255, 0.1) !important;
+        background-color: #ffffff !important; 
         border-radius: 10px !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
     }
+    
+    /* Color del texto que escribe el usuario (NEGRO para que se vea) */
     input {
-        color: white !important;
+        color: #002B5B !important; 
+        -webkit-text-fill-color: #002B5B !important;
+    }
+
+    /* Color del texto de ayuda (Placeholder) */
+    input::placeholder {
+        color: #666666 !important;
     }
 
     /* Botón Acceder */
@@ -61,33 +68,26 @@ st.markdown("""
         width: 100%;
         font-size: 18px;
         margin-top: 20px;
-        transition: 0.3s;
     }
+    
     .stButton>button:hover {
         background-color: #0056b3;
         color: white;
     }
 
-    /* Tarjetas del Menú Principal (Interior) */
+    /* Tarjetas del Menú Principal */
     .card {
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: rgba(255, 255, 255, 0.1);
         padding: 25px;
         border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         text-align: center;
-        transition: 0.3s;
-        height: 120px;
+        height: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-    }
-    .card:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-        transform: translateY(-5px);
     }
 
-    /* Ocultar elementos de Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
@@ -101,7 +101,6 @@ if "logueado" not in st.session_state:
 # --- PANTALLA DE LOGIN ---
 if not st.session_state["logueado"]:
     
-    # Contenedor del encabezado centrado
     st.markdown("""
         <div class="main-login">
             <h1 class="acceder-text">Acceder</h1>
@@ -109,15 +108,14 @@ if not st.session_state["logueado"]:
         </div>
     """, unsafe_allow_html=True)
 
-    # Formulario
     _, col_form, _ = st.columns([0.6, 2, 0.6])
     
     with col_form:
-        email = st.text_input("Correo electrónico", placeholder="usuario@mail.com", label_visibility="collapsed")
-        password = st.text_input("Contraseña", type="password", placeholder="••••••••", label_visibility="collapsed")
+        # Los labels están ocultos pero existen para Streamlit
+        email = st.text_input("Correo", placeholder="usuario@mail.com", label_visibility="collapsed")
+        password = st.text_input("Clave", type="password", placeholder="••••••••", label_visibility="collapsed")
         
         if st.button("ACCEDER"):
-            # Clave provisoria
             if email == "admin@csir.com" and password == "1913":
                 st.session_state["logueado"] = True
                 st.rerun()
@@ -126,39 +124,31 @@ if not st.session_state["logueado"]:
 
 # --- PANTALLA DE INICIO (DENTRO) ---
 else:
-    # Encabezado interior
     st.markdown("<h2 style='text-align: center;'>Panel de Control</h2>", unsafe_allow_html=True)
     st.write("---")
 
-    # Malla de Rectángulos (Tarjetas)
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown('<div class="card"><h3>👤 Perfil</h3></div>', unsafe_allow_html=True)
-        if st.button("Ver Perfil"):
-            st.info("Próximamente")
+        if st.button("Ver Perfil", key="btn1"):
+            pass
             
-        st.write("") # Espacio
-        
         st.markdown('<div class="card"><h3>⭐ Mejora de socio</h3></div>', unsafe_allow_html=True)
-        if st.button("Mejorar Plan"):
-            st.info("Próximamente")
+        if st.button("Mejorar Plan", key="btn2"):
+            pass
 
     with col2:
         st.markdown('<div class="card"><h3>💰 Pagos</h3></div>', unsafe_allow_html=True)
-        if st.button("Gestionar Pagos"):
-            st.info("Próximamente")
+        if st.button("Gestionar Pagos", key="btn3"):
+            pass
             
-        st.write("") # Espacio
-        
         st.markdown('<div class="card"><h3>🎟️ Comprar entradas</h3></div>', unsafe_allow_html=True)
-        if st.button("Ver Entradas"):
-            st.info("Próximamente")
+        if st.button("Ver Entradas", key="btn4"):
+            pass
 
-    # Botón Salir en el Sidebar
     with st.sidebar:
         st.image("csir.png", width=80)
-        st.write("Socio: **Caudillo del Parque**")
         if st.button("Cerrar Sesión"):
             st.session_state["logueado"] = False
             st.rerun()
