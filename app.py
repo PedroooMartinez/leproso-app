@@ -1,13 +1,13 @@
 import streamlit as st
 
-# 1. CONFIGURACIÓN DE PESTAÑA
+# 1. CONFIGURACIÓN
 st.set_page_config(
     page_title="CSIR | Oficina Virtual",
     page_icon="csir.png",
     layout="centered"
 )
 
-# 2. DISEÑO PREMIUM (CSS ACTUALIZADO)
+# 2. CSS PROFESIONAL
 st.markdown("""
     <style>
     .stApp {
@@ -15,53 +15,54 @@ st.markdown("""
         color: #ffffff;
     }
     
-    /* LOGIN */
+    /* LOGIN TITULOS */
     .main-login {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding-top: 50px;
+        padding-top: 30px;
     }
-    .acceder-text { font-size: 42px; font-weight: 800; margin-bottom: 0px; }
-    .caudillo-text { font-size: 20px; font-weight: 300; color: #a8dadc; margin-bottom: 40px; }
+    .acceder-text { font-size: 45px; font-weight: 800; margin-bottom: 0px; }
+    .caudillo-text { font-size: 20px; font-weight: 300; color: #a8dadc; margin-bottom: 30px; }
 
-    /* INPUTS LOGIN */
+    /* CUADROS DE TEXTO */
     div[data-baseweb="input"] { background-color: #ffffff !important; border-radius: 10px !important; }
     input { color: #002B5B !important; -webkit-text-fill-color: #002B5B !important; }
 
-    /* --- BOTONES DEL PANEL (TODOS IGUALES) --- */
-    .panel-btn>div>div>button {
+    /* BOTONES DEL PANEL (SIMÉTRICOS) */
+    .panel-btn button {
         background-color: rgba(255, 255, 255, 0.1) !important;
         color: white !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 15px !important;
         height: 120px !important;
         width: 100% !important;
-        font-size: 20px !important;
+        font-size: 18px !important;
         font-weight: bold !important;
         transition: 0.3s !important;
-        display: block !important;
+        margin-bottom: 15px !important;
     }
-    .panel-btn>div>div>button:hover {
+    .panel-btn button:hover {
         background-color: rgba(255, 255, 255, 0.2) !important;
         border: 1px solid #ffffff !important;
-        transform: translateY(-5px);
+        transform: translateY(-3px);
     }
 
-    /* --- BOTÓN ACCEDER (MÁS CHICO Y CENTRADO) --- */
-    .login-btn-container {
+    /* BOTÓN ACCEDER (CHICO Y CENTRADO) */
+    .login-center {
         display: flex;
         justify-content: center;
-        width: 100%;
+        margin-top: 10px;
     }
-    .login-btn-container>div>div>button {
+    .login-center button {
         background-color: #ffffff !important;
         color: #002B5B !important;
         height: 45px !important;
-        width: 150px !important; /* Tamaño más chico controlado */
+        width: 160px !important;
         border-radius: 10px !important;
         font-weight: bold !important;
+        font-size: 16px !important;
     }
 
     #MainMenu {visibility: hidden;}
@@ -70,7 +71,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 3. LÓGICA DE NAVEGACIÓN
+# 3. NAVEGACIÓN
 if "page" not in st.session_state:
     st.session_state["page"] = "login"
 
@@ -78,15 +79,14 @@ if "page" not in st.session_state:
 if st.session_state["page"] == "login":
     st.markdown('<div class="main-login"><h1 class="acceder-text">Acceder</h1><p class="caudillo-text">Socio caudillo</p></div>', unsafe_allow_html=True)
     
-    _, col_form, _ = st.columns([0.6, 2, 0.6])
+    _, col_form, _ = st.columns([0.5, 2, 0.5])
     with col_form:
-        st.text_input("Correo", placeholder="usuario@mail.com", label_visibility="collapsed", key="email")
-        st.text_input("Clave", type="password", placeholder="••••••••", label_visibility="collapsed", key="pass")
+        email_input = st.text_input("Correo", placeholder="usuario@mail.com", label_visibility="collapsed")
+        pass_input = st.text_input("Clave", type="password", placeholder="••••••••", label_visibility="collapsed")
         
-        # Contenedor para achicar el botón de acceder
-        st.markdown('<div class="login-btn-container">', unsafe_allow_html=True)
+        st.markdown('<div class="login-center">', unsafe_allow_html=True)
         if st.button("ACCEDER"):
-            if st.session_state.email == "admin@csir.com" and st.session_state.pass == "1913":
+            if email_input == "admin@csir.com" and pass_input == "1913":
                 st.session_state["page"] = "home"
                 st.rerun()
             else:
@@ -99,6 +99,7 @@ elif st.session_state["page"] == "home":
     
     col1, col2 = st.columns(2)
     
+    # Usamos contenedores con la clase panel-btn para que sean todos iguales
     with col1:
         st.markdown('<div class="panel-btn">', unsafe_allow_html=True)
         if st.button("👤 Perfil"):
@@ -128,7 +129,7 @@ elif st.session_state["page"] == "home":
 # --- SUBPÁGINAS ---
 elif st.session_state["page"] == "perfil":
     st.markdown("## 👤 Mi Perfil")
-    st.write("Datos del socio...")
+    st.write("Bienvenido, Socio Caudillo.")
     if st.button("⬅️ Volver"):
         st.session_state["page"] = "home"
         st.rerun()
