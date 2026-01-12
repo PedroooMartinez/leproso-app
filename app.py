@@ -1,40 +1,33 @@
 import streamlit as st
 
-# 1. CONFIGURACIÓN DE PÁGINA
+# 1. CONFIGURACIÓN
 st.set_page_config(
     page_title="CSIR | Oficina Virtual",
     page_icon="csir.png",
     layout="centered"
 )
 
-# 2. CSS MAESTRO (Para centrar TODO)
+# 2. CSS PARA MODO OSCURO Y CENTRADO DE IMAGEN
 st.markdown("""
     <style>
-    /* Fondo oscuro */
     .stApp {
         background-color: #0d1117;
         color: #ffffff;
     }
-    
-    /* Forzar el centrado de la imagen y el título */
-    .centrado-total {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        width: 100%;
+    /* ESTO CENTRA TODAS LAS IMÁGENES AUTOMÁTICAMENTE */
+    div[data-testid="stImage"] > img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
-
-    /* Estilo de los inputs para que no sean gigantes */
+    /* Estilo de inputs */
     .stTextInput>div>div>input {
         background-color: #161b22 !important;
         color: white !important;
         border: 1px solid #30363d !important;
         border-radius: 8px !important;
     }
-
-    /* Botón blanco minimalista */
+    /* Botón blanco */
     .stButton>button {
         background-color: #ffffff;
         color: #0d1117;
@@ -44,34 +37,32 @@ st.markdown("""
         width: 100%;
         height: 45px;
     }
-
-    /* Ocultar basura de la interfaz */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# 3. LÓGICA
+# 3. LÓGICA DE SESIÓN
 if "logueado" not in st.session_state:
     st.session_state["logueado"] = False
 
 # --- PANTALLA DE INICIO ---
 if not st.session_state["logueado"]:
     
-    # CONTENEDOR CENTRADO (Logo + Título)
-    st.markdown(f"""
-        <div class="centrado-total">
-            <img src="https://raw.githubusercontent.com/{st.secrets.get('github_user', 'TU_USUARIO')}/leproso-app/main/csir.png" width="120" style="margin-bottom: 20px;">
-            <h2 style="margin-bottom: 30px;">Socio CSIR</h2>
-        </div>
-    """, unsafe_allow_html=True)
+    st.write("") # Espacio arriba
+    st.write("")
     
-    # Si la imagen de arriba no carga porque el link es privado, usamos esta de respaldo:
-    # st.image("csir.png", width=120) 
+    # Ponemos la imagen directamente (El CSS de arriba la va a centrar)
+    st.image("csir.png", width=120)
+    
+    # Título centrado usando HTML simple
+    st.markdown("<h2 style='text-align: center;'>Socio CSIR</h2>", unsafe_allow_html=True)
+    st.write("")
 
-    # FORMULARIO
+    # Formulario (usamos columnas solo para achicar el ancho, no para el logo)
     _, col_form, _ = st.columns([0.5, 2, 0.5])
+    
     with col_form:
         email = st.text_input("Usuario", placeholder="correo@ejemplo.com")
         password = st.text_input("Contraseña", type="password", placeholder="••••••••")
@@ -85,10 +76,11 @@ if not st.session_state["logueado"]:
 
 # --- PANTALLA PRINCIPAL ---
 else:
-    st.sidebar.image("csir.png", width=60)
-    if st.sidebar.button("Cerrar Sesión"):
-        st.session_state["logueado"] = False
-        st.rerun()
-
+    with st.sidebar:
+        st.image("csir.png", width=80)
+        if st.sidebar.button("Cerrar Sesión"):
+            st.session_state["logueado"] = False
+            st.rerun()
+    
     st.markdown("## Bienvenido al Portal")
-    # ... resto del código igual ...
+    st.write("Gestioná tus entradas y beneficios de la Lepra.")
