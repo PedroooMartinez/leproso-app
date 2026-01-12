@@ -47,8 +47,7 @@ st.markdown("""
 col_logo1, col_logo2, col_logo3 = st.columns([1, 1, 1])
 with col_logo2:
     # URL de un escudo de la Lepra (podes cambiarla si tenes otra)
-    st.image("https://upload.wikimedia.org/wikipedia/commons/2/2e/Escudo_de_Independiente_Rivadavia.png", width=150)
-
+   st.image("csir.png", width=150)
 st.markdown("<h1 style='text-align: center;'>OFICINA VIRTUAL</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center; color: #a8dadc;'>Club Sportivo Independiente Rivadavia</h3>", unsafe_allow_html=True)
 
