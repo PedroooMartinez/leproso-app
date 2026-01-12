@@ -1,22 +1,35 @@
 import streamlit as st
 import pandas as pd
 
-# 1. CONFIGURACIÓN DE PÁGINA (Minimalista)
+# 1. CONFIGURACIÓN DE PÁGINA
 st.set_page_config(
     page_title="CSIR | Oficina Virtual",
-    page_icon="csir.png",  # Tu archivo de logo
+    page_icon="csir.png",
     layout="centered"
 )
 
-# 2. CSS PARA DISEÑO PROFESIONAL Y MINIMALISTA
+# 2. CSS PARA DISEÑO PROFESIONAL, MINIMALISTA Y CENTRADO
 st.markdown("""
     <style>
-    /* Fondo liso y oscuro profesional */
+    /* Fondo oscuro profesional */
     .stApp {
         background-color: #0d1117;
         color: #ffffff;
     }
     
+    /* TRUCO PARA CENTRAR TODAS LAS IMÁGENES */
+    [data-testid="stImage"] {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Centrar títulos manualmente */
+    .titulo-centrado {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
     /* Estilo de los inputs */
     .stTextInput>div>div>input {
         background-color: #161b22 !important;
@@ -26,7 +39,7 @@ st.markdown("""
         padding: 10px;
     }
 
-    /* Botón Minimalista */
+    /* Botón Minimalista Blanco */
     .stButton>button {
         background-color: #ffffff;
         color: #0d1117;
@@ -36,22 +49,14 @@ st.markdown("""
         width: 100%;
         height: 45px;
         transition: 0.3s;
+        margin-top: 10px;
     }
     .stButton>button:hover {
         background-color: #0056b3;
         color: white;
     }
 
-    /* Contenedor de Login */
-    .login-box {
-        background-color: #161b22;
-        padding: 30px;
-        border-radius: 12px;
-        border: 1px solid #30363d;
-        text-align: center;
-    }
-    
-    /* Quitar el menú de Streamlit para más limpieza */
+    /* Ocultar menús innecesarios de Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
@@ -63,25 +68,27 @@ if "logueado" not in st.session_state:
     st.session_state["logueado"] = False
 
 # --- PANTALLA DE INICIO (LOGIN) ---
-# --- PANTALLA DE INICIO (LOGIN) ---
 if not st.session_state["logueado"]:
-    # Creamos 3 columnas: la del medio es donde va el contenido
-    # Ajustamos los números [1, 2, 1] para que la del centro sea el foco
-    col_izq, col_centro, col_der = st.columns([1, 2, 1])
     
-    with col_centro:
-        # Aquí usamos un truco de HTML para asegurar el centrado total del logo
-        st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-        st.image("csir.png", width=120)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-        st.markdown("<h2 style='text-align: center; margin-top: 10px;'>Socio CSIR</h2>", unsafe_allow_html=True)
-        
-        # El resto del formulario se mantiene igual
+    # Espacio superior
+    st.write("")
+    st.write("")
+    
+    # Logo centrado (Gracias al CSS de arriba)
+    st.image("csir.png", width=120)
+    
+    # Título centrado
+    st.markdown("<h2 class='titulo-centrado'>Socio CSIR</h2>", unsafe_allow_html=True)
+    
+    # Contenedor del formulario (usamos columnas para que no sea tan ancho en PC)
+    _, col_form, _ = st.columns([0.5, 2, 0.5])
+    
+    with col_form:
         email = st.text_input("Usuario", placeholder="correo@ejemplo.com")
         password = st.text_input("Contraseña", type="password", placeholder="••••••••")
-        st.write("")
+        
         if st.button("Iniciar Sesión"):
+            # Datos de prueba
             if email == "azul@gmail.com" and password == "1913":
                 st.session_state["logueado"] = True
                 st.rerun()
@@ -94,35 +101,37 @@ else:
     with st.sidebar:
         st.image("csir.png", width=60)
         st.write("### Mi Cuenta")
-        st.write("ID Socio: **#1913-01**")
+        st.write("Estado: **Socio Activo**")
+        st.write("---")
         if st.button("Cerrar Sesión"):
             st.session_state["logueado"] = False
             st.rerun()
 
     # Contenido principal
     st.markdown("## Bienvenido al Portal")
-    st.write("Gestioná tus entradas y beneficios.")
+    st.write("Seleccioná una opción para continuar:")
     
-    st.write("---")
+    st.write("")
     
-    # Grid de acciones rápidas
-    c1, c2 = st.columns(2)
-    with c1:
+    # Tarjetas de acciones
+    col1, col2 = st.columns(2)
+    
+    with col1:
         st.markdown("""
-        <div style='background-color: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d;'>
+        <div style='background-color: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d; height: 150px;'>
             <h4 style='margin-top: 0;'>🎟️ Entradas</h4>
-            <p style='color: #8b949e;'>Comprá tus tickets para el próximo partido.</p>
+            <p style='color: #8b949e; font-size: 14px;'>Sacá tu ticket para ver a la Lepra en el Gargantini.</p>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("Ir a Entradas"):
-            st.info("Función de compra activa próximamente")
+        if st.button("Comprar Tickets"):
+            st.info("Módulo de ventas en mantenimiento")
             
-    with c2:
+    with col2:
         st.markdown("""
-        <div style='background-color: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d;'>
-            <h4 style='margin-top: 0;'>👤 Mi Perfil</h4>
-            <p style='color: #8b949e;'>Actualizá tus datos personales de socio.</p>
+        <div style='background-color: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d; height: 150px;'>
+            <h4 style='margin-top: 0;'>💳 Mi Carnet</h4>
+            <p style='color: #8b949e; font-size: 14px;'>Visualizá tu carnet digital y código QR de acceso.</p>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("Ver Mi Perfil"):
-            st.write("Datos del socio...")
+        if st.button("Ver Mi Carnet"):
+            st.write("Cargando carnet...")
