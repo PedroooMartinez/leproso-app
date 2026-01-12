@@ -7,7 +7,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. DISEÑO PREMIUM (CSS)
+# 2. DISEÑO PREMIUM (CSS ACTUALIZADO)
 st.markdown("""
     <style>
     .stApp {
@@ -30,29 +30,38 @@ st.markdown("""
     div[data-baseweb="input"] { background-color: #ffffff !important; border-radius: 10px !important; }
     input { color: #002B5B !important; -webkit-text-fill-color: #002B5B !important; }
 
-    /* BOTONES QUE PARECEN RECTÁNGULOS (DENTRO) */
-    .stButton>button {
+    /* --- BOTONES DEL PANEL (TODOS IGUALES) --- */
+    .panel-btn>div>div>button {
         background-color: rgba(255, 255, 255, 0.1) !important;
         color: white !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 15px !important;
         height: 120px !important;
-        font-size: 22px !important;
+        width: 100% !important;
+        font-size: 20px !important;
         font-weight: bold !important;
         transition: 0.3s !important;
-        margin-bottom: 10px !important;
+        display: block !important;
     }
-    .stButton>button:hover {
+    .panel-btn>div>div>button:hover {
         background-color: rgba(255, 255, 255, 0.2) !important;
         border: 1px solid #ffffff !important;
         transform: translateY(-5px);
     }
-    
-    /* Ajuste para el botón de ACCEDER que sea blanco */
-    .login-btn>div>div>button {
+
+    /* --- BOTÓN ACCEDER (MÁS CHICO Y CENTRADO) --- */
+    .login-btn-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    .login-btn-container>div>div>button {
         background-color: #ffffff !important;
         color: #002B5B !important;
-        height: 50px !important;
+        height: 45px !important;
+        width: 150px !important; /* Tamaño más chico controlado */
+        border-radius: 10px !important;
+        font-weight: bold !important;
     }
 
     #MainMenu {visibility: hidden;}
@@ -71,38 +80,44 @@ if st.session_state["page"] == "login":
     
     _, col_form, _ = st.columns([0.6, 2, 0.6])
     with col_form:
-        email = st.text_input("Correo", placeholder="usuario@mail.com", label_visibility="collapsed")
-        password = st.text_input("Clave", type="password", placeholder="••••••••", label_visibility="collapsed")
-        st.markdown('<div class="login-btn">', unsafe_allow_html=True)
+        st.text_input("Correo", placeholder="usuario@mail.com", label_visibility="collapsed", key="email")
+        st.text_input("Clave", type="password", placeholder="••••••••", label_visibility="collapsed", key="pass")
+        
+        # Contenedor para achicar el botón de acceder
+        st.markdown('<div class="login-btn-container">', unsafe_allow_html=True)
         if st.button("ACCEDER"):
-            if email == "admin@csir.com" and password == "1913":
+            if st.session_state.email == "admin@csir.com" and st.session_state.pass == "1913":
                 st.session_state["page"] = "home"
                 st.rerun()
+            else:
+                st.error("Datos incorrectos")
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- PANTALLA PRINCIPAL ---
+# --- PANTALLA PRINCIPAL (DENTRO) ---
 elif st.session_state["page"] == "home":
     st.markdown("<h2 style='text-align: center; margin-bottom: 30px;'>Panel de Control</h2>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
+        st.markdown('<div class="panel-btn">', unsafe_allow_html=True)
         if st.button("👤 Perfil"):
             st.session_state["page"] = "perfil"
             st.rerun()
-            
         if st.button("⭐ Mejora de socio"):
             st.session_state["page"] = "mejora"
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
+        st.markdown('<div class="panel-btn">', unsafe_allow_html=True)
         if st.button("💰 Pagos"):
             st.session_state["page"] = "pagos"
             st.rerun()
-            
         if st.button("🎟️ Comprar entradas"):
             st.session_state["page"] = "entradas"
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with st.sidebar:
         st.image("csir.png", width=80)
@@ -110,17 +125,10 @@ elif st.session_state["page"] == "home":
             st.session_state["page"] = "login"
             st.rerun()
 
-# --- SUBPÁGINAS (EJEMPLO) ---
+# --- SUBPÁGINAS ---
 elif st.session_state["page"] == "perfil":
-    st.title("👤 Mi Perfil")
-    st.write("Aquí irán los datos del socio caudillo.")
-    if st.button("⬅️ Volver"):
-        st.session_state["page"] = "home"
-        st.rerun()
-
-elif st.session_state["page"] == "pagos":
-    st.title("💰 Mis Pagos")
-    st.write("Aquí se verá el estado de cuenta.")
+    st.markdown("## 👤 Mi Perfil")
+    st.write("Datos del socio...")
     if st.button("⬅️ Volver"):
         st.session_state["page"] = "home"
         st.rerun()
