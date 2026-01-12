@@ -1,107 +1,123 @@
 import streamlit as st
+import pandas as pd
 
-# 1. CONFIGURACIÓN DE PÁGINA
-st.set_page_config(page_title="Socio CSIR", page_icon="csir.png", layout="centered")
+# 1. CONFIGURACIÓN DE PÁGINA (Minimalista)
+st.set_page_config(
+    page_title="CSIR | Oficina Virtual",
+    page_icon="csir.png",  # Tu archivo de logo
+    layout="centered"
+)
 
-# 2. DISEÑO AVANZADO (CSS)
+# 2. CSS PARA DISEÑO PROFESIONAL Y MINIMALISTA
 st.markdown("""
     <style>
-    /* Fondo y texto general */
+    /* Fondo liso y oscuro profesional */
     .stApp {
-        background: linear-gradient(180deg, #002B5B 0%, #001a38 100%);
-        color: white;
+        background-color: #0d1117;
+        color: #ffffff;
     }
-    /* Estilo de las cajas de entrada */
+    
+    /* Estilo de los inputs */
     .stTextInput>div>div>input {
-        background-color: #f0f2f6;
-        color: #002B5B;
-        border-radius: 8px;
+        background-color: #161b22 !important;
+        color: white !important;
+        border: 1px solid #30363d !important;
+        border-radius: 8px !important;
+        padding: 10px;
     }
-    /* Botón principal estilo 'Leproso' */
+
+    /* Botón Minimalista */
     .stButton>button {
-        background-color: #0056b3;
-        color: white;
-        border: 2px solid #ffffff;
-        border-radius: 20px;
-        font-weight: bold;
-        transition: 0.3s;
-        height: 3em;
+        background-color: #ffffff;
+        color: #0d1117;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
         width: 100%;
+        height: 45px;
+        transition: 0.3s;
     }
     .stButton>button:hover {
-        background-color: #ffffff;
-        color: #002B5B;
+        background-color: #0056b3;
+        color: white;
     }
-    /* Tarjeta informativa */
-    .partido-card {
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 20px;
-        border-radius: 15px;
-        border-left: 5px solid #ffffff;
-        margin-bottom: 20px;
+
+    /* Contenedor de Login */
+    .login-box {
+        background-color: #161b22;
+        padding: 30px;
+        border-radius: 12px;
+        border: 1px solid #30363d;
+        text-align: center;
     }
+    
+    /* Quitar el menú de Streamlit para más limpieza */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# 3. CABECERA CON LOGO
-col_logo1, col_logo2, col_logo3 = st.columns([1, 1, 1])
-with col_logo2:
-    # URL de un escudo de la Lepra (podes cambiarla si tenes otra)
-   st.image("csir.png", width=150)
-st.markdown("<h1 style='text-align: center;'>OFICINA VIRTUAL</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='text-align: center; color: #a8dadc;'>Club Sportivo Independiente Rivadavia</h3>", unsafe_allow_html=True)
+# 3. LÓGICA DE NAVEGACIÓN
+if "logueado" not in st.session_state:
+    st.session_state["logueado"] = False
 
-st.write("---")
-
-# 4. LÓGICA DE NAVEGACIÓN
-if "sesion" not in st.session_state:
-    st.session_state["sesion"] = False
-
-if not st.session_state["sesion"]:
-    # FORMULARIO DE ACCESO
-    st.markdown("### 🔐 Ingreso Socios")
-    email = st.text_input("Correo electrónico", placeholder="ejemplo@socio.com")
-    password = st.text_input("Contraseña", type="password", placeholder="****")
+# --- PANTALLA DE INICIO (LOGIN) ---
+if not st.session_state["logueado"]:
+    # Centrar el logo y el login
+    _, col_centrada, _ = st.columns([1, 2, 1])
     
-    st.write("") # Espacio
-    if st.button("ACCEDER AL PORTAL"):
-        if email == "azul@gmail.com" and password == "1913":
-            st.session_state["sesion"] = True
-            st.rerun()
-        else:
-            st.error("❌ Los datos no coinciden. Verificá tu número de socio.")
+    with col_centrada:
+        st.image("csir.png", width=100)
+        st.markdown("<h2 style='text-align: center; margin-bottom: 20px;'>Socio CSIR</h2>", unsafe_allow_html=True)
+        
+        with st.container():
+            email = st.text_input("Usuario", placeholder="correo@ejemplo.com")
+            password = st.text_input("Contraseña", type="password", placeholder="••••••••")
+            st.write("")
+            if st.button("Iniciar Sesión"):
+                # Por ahora, clave estática hasta conectar el Excel
+                if email == "azul@gmail.com" and password == "1913":
+                    st.session_state["logueado"] = True
+                    st.rerun()
+                else:
+                    st.error("Credenciales no válidas")
 
+# --- PANTALLA PRINCIPAL (DENTRO) ---
 else:
-    # MENÚ PARA SOCIOS LOGUEADOS
-    st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/2/2e/Escudo_de_Independiente_Rivadavia.png", width=80)
-    st.sidebar.title("Mi Perfil")
-    st.sidebar.write("Socio: **Azul de Corazón**")
-    
-    if st.sidebar.button("Cerrar Sesión"):
-        st.session_state["sesion"] = False
-        st.rerun()
+    # Sidebar minimalista
+    with st.sidebar:
+        st.image("csir.png", width=60)
+        st.write("### Mi Cuenta")
+        st.write("ID Socio: **#1913-01**")
+        if st.button("Cerrar Sesión"):
+            st.session_state["logueado"] = False
+            st.rerun()
 
-    # VENTA DE ENTRADAS
-    st.markdown("## 🎟️ Compra de Entradas")
+    # Contenido principal
+    st.markdown("## Bienvenido al Portal")
+    st.write("Gestioná tus entradas y beneficios.")
     
-    # Tarjeta del próximo partido
-    st.markdown("""
-        <div class="partido-card">
-            <h4>⚽ PRÓXIMO ENCUENTRO</h4>
-            <p><b>Independiente Rivadavia vs River Plate</b><br>
-            Estadio: Bautista Gargantini<br>
-            Fecha: Domingo 21:00 hs</p>
+    st.write("---")
+    
+    # Grid de acciones rápidas
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown("""
+        <div style='background-color: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d;'>
+            <h4 style='margin-top: 0;'>🎟️ Entradas</h4>
+            <p style='color: #8b949e;'>Comprá tus tickets para el próximo partido.</p>
         </div>
-    """, unsafe_allow_html=True)
-
-    ubicacion = st.selectbox("Seleccioná tu ubicación en el estadio:", 
-                            ["Popular Salvador Iúdica", "Platea Este", "Platea Oeste (Techada)"])
-    
-    precios = {"Popular Salvador Iúdica": 15000, "Platea Este": 20000, "Platea Oeste (Techada)": 25000}
-    monto = precios[ubicacion]
-
-    st.markdown(f"### Importe: **${monto}**")
-    
-    if st.button("ADQUIRIR ENTRADA"):
-        st.success(f"¡Reserva confirmada en {ubicacion}!")
-        st.balloons()
+        """, unsafe_allow_html=True)
+        if st.button("Ir a Entradas"):
+            st.info("Función de compra activa próximamente")
+            
+    with c2:
+        st.markdown("""
+        <div style='background-color: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d;'>
+            <h4 style='margin-top: 0;'>👤 Mi Perfil</h4>
+            <p style='color: #8b949e;'>Actualizá tus datos personales de socio.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Ver Mi Perfil"):
+            st.write("Datos del socio...")
